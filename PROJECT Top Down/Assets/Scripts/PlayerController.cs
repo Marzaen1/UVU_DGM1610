@@ -4,13 +4,20 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    // Movement Controls, setup
     public float speed = 20.0f;
 
     public float hInput;
     public float vInput;
+
     // Limiting the Play Area to prevent character from leaving Camera Range.
     public float xRange = 9.3f;
     public float yRange = 4.5f;
+    
+    // Ice Knife controls
+    public GameObject projectile;
+    // Offset to prevent Ice Knife from clipping with rigidbody.
+    public Vector3 offset = new Vector3(0,1,0);
 
     // public float for Health
   
@@ -44,6 +51,11 @@ public class PlayerController : MonoBehaviour
       if (transform.position.y > yRange)
       {
           transform.position = new Vector3(transform.position.x, yRange, transform.position.z);
+      }
+    // Firing the Ice Knife projectile.
+      if(Input.GetKeyDown(KeyCode.Space))
+      {
+        Instantiate(projectile, transform.position + offset, projectile.transform.rotation);
       }
     }
 }
