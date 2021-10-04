@@ -5,7 +5,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     // Movement Controls, setup
-    public float speed = 20.0f;
+    public float speed = 12.0f;
+    public float turnSpeed = 175.0f;
 
     public float hInput;
     public float vInput;
@@ -16,6 +17,8 @@ public class PlayerController : MonoBehaviour
     
     // Ice Knife controls
     public GameObject projectile;
+    public Transform launcher;
+
     // Offset to prevent Ice Knife from clipping with rigidbody.
     public Vector3 offset = new Vector3(0,1,0);
 
@@ -29,7 +32,7 @@ public class PlayerController : MonoBehaviour
       hInput = Input.GetAxis("Horizontal");  
       vInput = Input.GetAxis("Vertical");
 
-      transform.Translate(Vector3.right * speed * hInput * Time.deltaTime);
+      transform.Rotate(Vector3.back, turnSpeed * hInput * Time.deltaTime);
       transform.Translate(Vector3.up * speed * vInput * Time.deltaTime);
 
     // Creating Barrier Wall on the Left Side.
@@ -52,10 +55,11 @@ public class PlayerController : MonoBehaviour
       {
           transform.position = new Vector3(transform.position.x, yRange, transform.position.z);
       }
+
     // Firing the Ice Knife projectile.
       if(Input.GetKeyDown(KeyCode.Space))
       {
-        Instantiate(projectile, transform.position + offset, projectile.transform.rotation);
+        Instantiate(projectile, launcher.transform.position, launcher.transform.rotation);
       }
     }
 }
