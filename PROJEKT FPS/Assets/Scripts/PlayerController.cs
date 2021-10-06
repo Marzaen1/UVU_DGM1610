@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        camera = camera.main;
+        camera = Camera.main;
         rig = GetComponent<Rigidbody>();
     }
 
@@ -30,16 +30,25 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         Move();
+        CamLook();
+        
+        if(Input.GetButtonDown("Jump"))
+        {
+            Jump();
+        }
     }
     
     // Graphing Movement
     void Move()
     {
-        // Keybinds for direction
+        // Keybinds for movement
         float x = Input.GetAxis("Horizontal") * moveSpeed; 
         float z = Input.GetAxis("Vertical") * moveSpeed;
+        
         // Movement goes Brrrrrrr
-        rig.velocity = new Vector3(x, rig.velocity.y, z);
+                // rig.velocity = new Vector3(x, rig.velocity.y, z);            // Old Code: Movement went in the wrong direction, didn't follow the camera direction
+        Vector3 dir = transform.right * x + transform.forward * z;
+        rig.velocity = dir;
     }
 
     // Controlling the First Person Camera
@@ -47,5 +56,22 @@ public class PlayerController : MonoBehaviour
     {
         float y = Input.GetAxis("Mouse X") * lookSens;
         rotX += Input.GetAxis("Mouse Y") * lookSens;                // Same as rotX = rotX + Input.GetAxis("Mouse Y") * lookSens
+
+        // Looking around using the mouse movements
+        rotX = Mathf.Clamp(rotX, minLookX, maxLookX);
+        camera.transform.localRotation = Quaternion.Euler(-rotX, 0, 0);
+        transform.eulerAngles += Vector3.up * y;
+    }
+    
+    // Jumping goes boing, boing!
+    void Jump()
+    {
+        Ray rayC = new Ray(transform.position, Vector3.down);
+
+        if(Physics.Raycast(rayC, 1.1f))
+        {
+            rig.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            // Jump is great. Falling is VERY slow.
+        }
     }
 }
