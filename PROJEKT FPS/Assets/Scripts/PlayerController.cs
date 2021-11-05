@@ -49,10 +49,7 @@ public class PlayerController : MonoBehaviour
                 weapon.Shoot();
             }
         }
-    }
-    
-    void FixedUpdate()
-    {
+        // Jumping by pressing a key/button
         if(Input.GetButtonDown("Jump"))
             Jump();
     }
@@ -63,10 +60,12 @@ public class PlayerController : MonoBehaviour
         // Keybinds for movement
         float x = Input.GetAxis("Horizontal") * moveSpeed; 
         float z = Input.GetAxis("Vertical") * moveSpeed;
-        
         // Movement goes Brrrrrrr
                 // rig.velocity = new Vector3(x, rig.velocity.y, z);            // Old Code: Movement went in the wrong direction, didn't follow the camera direction
         Vector3 dir = transform.right * x + transform.forward * z;
+        // Add direction with force to Jump
+        dir.y = rig.velocity.y;
+        // Add force to movement
         rig.velocity = dir;
     }
 
@@ -85,12 +84,9 @@ public class PlayerController : MonoBehaviour
     // Jumping goes boing, boing!
     void Jump()
     {
-        Ray rayC = new Ray(transform.position, Vector3.down);
+        Ray ray = new Ray(transform.position, Vector3.down);
 
-        if(Physics.Raycast(rayC, 1.1f))
-        {
+        if(Physics.Raycast(ray, 1.1f))
             rig.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            // Jump is great. Falling is VERY slow.
-        }
     }
 }
