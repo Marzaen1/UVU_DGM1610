@@ -18,6 +18,16 @@ public class PlayerController : MonoBehaviour
     // Other Variables
     private Camera camera;              // Fetching our handsome camera man
     private Rigidbody rig;              // Working with the rigidbody
+    private Weapon weapon;                 // Accessing our gun / weapon
+    
+    // Awake is called as soon as the script becomes active
+    void Awake()
+    {
+        // Disable Cursor
+        Cursor.lockState = CursorLockMode.Locked;
+
+        weapon = GetComponent<Weapon>();
+    }
     
     // Start is called before the first frame update
     void Start()
@@ -31,11 +41,20 @@ public class PlayerController : MonoBehaviour
     {
         Move();
         CamLook();
-        
-        if(Input.GetButtonDown("Jump"))
+        // Firing the weapon button
+        if(Input.GetButton("Fire1"))
         {
-            Jump();
+            if(weapon.CanShoot())
+            {
+                weapon.Shoot();
+            }
         }
+    }
+    
+    void FixedUpdate()
+    {
+        if(Input.GetButtonDown("Jump"))
+            Jump();
     }
     
     // Graphing Movement
